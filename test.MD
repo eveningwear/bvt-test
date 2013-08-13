@@ -1923,6 +1923,7 @@ The `q` query parameter may include the following `attribute-names`:
 * service_plan_guid
 * service_binding_guid
 * gateway_name
+* owner_guid
 
 See the API Overview for a more detailed description of these parameters.
 
@@ -1957,6 +1958,8 @@ The schema for the `:entity` hash for ServiceInstance is:
 | service_plan_guid    | String                                                       |
 | service_plan_url     | String /HTTPS_URL_REGEX/                                     |
 | service_bindings_url | String /HTTPS_URL_REGEX/                                     |
+| owners_url           | String /HTTPS_URL_REGEX/                                     |
+| collaborations_url   | String /HTTPS_URL_REGEX/                                     |
 
 
 
@@ -1974,6 +1977,7 @@ Creates a ServiceInstance.
 | space_guid            | required | String                                             |
 | service_plan_guid     | required | String                                             |
 | service_binding_guids | optional | [String]                                           |
+| owner_guids           | optional | [String]                                           |
 
 #### Response Format:
 
@@ -2002,6 +2006,8 @@ The schema for the `:entity` hash for ServiceInstance is:
 | service_plan_guid    | String                                                       |
 | service_plan_url     | String /HTTPS_URL_REGEX/                                     |
 | service_bindings_url | String /HTTPS_URL_REGEX/                                     |
+| owners_url           | String /HTTPS_URL_REGEX/                                     |
+| collaborations_url   | String /HTTPS_URL_REGEX/                                     |
 
 
 
@@ -2030,6 +2036,7 @@ Updates a ServiceInstance.
 | space_guid            | optional | String                                             |
 | service_plan_guid     | optional | String                                             |
 | service_binding_guids | optional | [String]                                           |
+| owner_guids           | optional | [String]                                           |
 
 #### Response Format:
 
@@ -2058,6 +2065,8 @@ The schema for the `:entity` hash for ServiceInstance is:
 | service_plan_guid    | String                                                       |
 | service_plan_url     | String /HTTPS_URL_REGEX/                                     |
 | service_bindings_url | String /HTTPS_URL_REGEX/                                     |
+| owners_url           | String /HTTPS_URL_REGEX/                                     |
+| collaborations_url   | String /HTTPS_URL_REGEX/                                     |
 
 
 
@@ -2094,6 +2103,8 @@ The schema for the `:entity` hash for ServiceInstance is:
 | service_plan_guid    | String                                                       |
 | service_plan_url     | String /HTTPS_URL_REGEX/                                     |
 | service_bindings_url | String /HTTPS_URL_REGEX/                                     |
+| owners_url           | String /HTTPS_URL_REGEX/                                     |
+| collaborations_url   | String /HTTPS_URL_REGEX/                                     |
 
 
 
@@ -2494,6 +2505,411 @@ The schema for the `:entity` hash for ServiceAuthToken is:
 Resource URL: `DELETE /v2/service_auth_tokens/:guid`
 
 Deletes a ServiceAuthToken.
+
+#### Response Format:
+
+None
+
+
+## VchsServicePlanQuota
+
+
+## CC Specific API
+
+NOTE: Like the migrations and the models this is being fleshed out and should be reviewed for hierarchy and relationships only.
+
+### LIST VchsServicePlanQuotas
+
+Resource URL: `GET /v2/vchs_service_plan_quotas`
+
+Returns a paginated response of VchsServicePlanQuotas.
+
+#### Query Parameters
+
+| Parameter              | Description                                                                      |
+| ---------              | -----------                                                                      |
+| limit                  | Maximum number of results to return.                                             |
+| offset                 | Offset from which to start iteration.                                            |
+| urls-only              | If 1, only return a list of urls; do not expand metadata or resource attributes |
+| inline-relations-depth | 0 - don't inline any relations and return URLs.  Otherwise, inline to depth N.   |
+| q                      | Search/filter string of the form `<attribute-name>:<value>` |
+
+The `q` query parameter may include the following `attribute-names`:
+* service_plan_guid
+
+See the API Overview for a more detailed description of these parameters.
+
+#### Response Format:
+
+The response is in the standard v2 paginated response format, i.e.:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| total_results        | Integer                                                      |
+| prev_url             | String /HTTPS_URL_REGEX/                                     |
+| next_url             | String /HTTPS_URL_REGEX/                                     |
+| resources            | [{:metadata => Hash,:entity => Hash,}]                       |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServicePlanQuota is:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| quota                | Integer                                                      |
+| vdc_id               | String                                                       |
+| space_guid           | String                                                       |
+| service_plan_guid    | String                                                       |
+| service_plan_url     | String /HTTPS_URL_REGEX/                                     |
+
+
+
+### CREATE VchsServicePlanQuota
+
+Resource URL: `POST /v2/vchs_service_plan_quotas`
+
+Creates a VchsServicePlanQuota.
+
+#### Request Format:
+
+| name                 | notes    | schema                                             |
+| -------------------- | -------- | -------------------------------------------------- |
+| quota                | required | Integer                                            |
+| vdc_id               | optional | String                                             |
+| space_guid           | optional | String                                             |
+| service_plan_guid    | required | String                                             |
+
+#### Response Format:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| metadata             | Hash                                                         |
+| entity               | Hash                                                         |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServicePlanQuota is:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| quota                | Integer                                                      |
+| vdc_id               | String                                                       |
+| space_guid           | String                                                       |
+| service_plan_guid    | String                                                       |
+| service_plan_url     | String /HTTPS_URL_REGEX/                                     |
+
+
+
+
+### UPDATE VchsServicePlanQuota
+
+Resource URL: `PUT /v2/vchs_service_plan_quotas`
+
+Updates a VchsServicePlanQuota.
+
+#### Query Parameters
+
+| Parameter         | Description |
+| ---------         | ----------- |
+| collection-method | See below.  |
+
+`collection-method` may take on the following values:
+* `add` = merge any supplied ids with the relations that already exist.
+* `replace` = any supplied ids replace their corresponding relations.
+
+#### Request Format:
+
+| name                 | notes    | schema                                             |
+| -------------------- | -------- | -------------------------------------------------- |
+| quota                | optional | Integer                                            |
+| vdc_id               | optional | String                                             |
+| space_guid           | optional | String                                             |
+| service_plan_guid    | optional | String                                             |
+
+#### Response Format:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| metadata             | Hash                                                         |
+| entity               | Hash                                                         |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServicePlanQuota is:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| quota                | Integer                                                      |
+| vdc_id               | String                                                       |
+| space_guid           | String                                                       |
+| service_plan_guid    | String                                                       |
+| service_plan_url     | String /HTTPS_URL_REGEX/                                     |
+
+
+
+### GET VchsServicePlanQuota
+
+Resource URL: `GET /v2/vchs_service_plan_quotas/:guid`
+
+Reads a VchsServicePlanQuota.
+
+#### Response Format:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| metadata             | Hash                                                         |
+| entity               | Hash                                                         |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServicePlanQuota is:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| quota                | Integer                                                      |
+| vdc_id               | String                                                       |
+| space_guid           | String                                                       |
+| service_plan_guid    | String                                                       |
+| service_plan_url     | String /HTTPS_URL_REGEX/                                     |
+
+
+
+
+### DELETE VchsServicePlanQuota
+
+Resource URL: `DELETE /v2/vchs_service_plan_quotas/:guid`
+
+Deletes a VchsServicePlanQuota.
+
+#### Response Format:
+
+None
+
+
+## VchsServiceInstancesCollaborator
+
+
+## CC Specific API
+
+NOTE: Like the migrations and the models this is being fleshed out and should be reviewed for hierarchy and relationships only.
+
+### LIST VchsServiceInstancesCollaborators
+
+Resource URL: `GET /v2/vchs_service_instances_collaborations`
+
+Returns a paginated response of VchsServiceInstancesCollaborators.
+
+#### Query Parameters
+
+| Parameter              | Description                                                                      |
+| ---------              | -----------                                                                      |
+| limit                  | Maximum number of results to return.                                             |
+| offset                 | Offset from which to start iteration.                                            |
+| urls-only              | If 1, only return a list of urls; do not expand metadata or resource attributes |
+| inline-relations-depth | 0 - don't inline any relations and return URLs.  Otherwise, inline to depth N.   |
+| q                      | Search/filter string of the form `<attribute-name>:<value>` |
+
+The `q` query parameter may include the following `attribute-names`:
+* service_instance_guid
+* user_guid
+
+See the API Overview for a more detailed description of these parameters.
+
+#### Response Format:
+
+The response is in the standard v2 paginated response format, i.e.:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| total_results        | Integer                                                      |
+| prev_url             | String /HTTPS_URL_REGEX/                                     |
+| next_url             | String /HTTPS_URL_REGEX/                                     |
+| resources            | [{:metadata => Hash,:entity => Hash,}]                       |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServiceInstancesCollaborator is:
+
+| name                  | schema                                                       |
+| --------------------- | ------------------------------------------------------------ |
+| privileges            | Array                                                        |
+| service_instance_guid | String                                                       |
+| service_instance_url  | String /HTTPS_URL_REGEX/                                     |
+| user_guid             | String                                                       |
+| user_url              | String /HTTPS_URL_REGEX/                                     |
+
+
+
+### CREATE VchsServiceInstancesCollaborator
+
+Resource URL: `POST /v2/vchs_service_instances_collaborations`
+
+Creates a VchsServiceInstancesCollaborator.
+
+#### Request Format:
+
+| name                  | notes    | schema                                             |
+| --------------------- | -------- | -------------------------------------------------- |
+| privileges            | optional | Array                                              |
+| service_instance_guid | required | String                                             |
+| user_guid             | required | String                                             |
+
+#### Response Format:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| metadata             | Hash                                                         |
+| entity               | Hash                                                         |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServiceInstancesCollaborator is:
+
+| name                  | schema                                                       |
+| --------------------- | ------------------------------------------------------------ |
+| privileges            | Array                                                        |
+| service_instance_guid | String                                                       |
+| service_instance_url  | String /HTTPS_URL_REGEX/                                     |
+| user_guid             | String                                                       |
+| user_url              | String /HTTPS_URL_REGEX/                                     |
+
+
+
+
+### UPDATE VchsServiceInstancesCollaborator
+
+Resource URL: `PUT /v2/vchs_service_instances_collaborations`
+
+Updates a VchsServiceInstancesCollaborator.
+
+#### Query Parameters
+
+| Parameter         | Description |
+| ---------         | ----------- |
+| collection-method | See below.  |
+
+`collection-method` may take on the following values:
+* `add` = merge any supplied ids with the relations that already exist.
+* `replace` = any supplied ids replace their corresponding relations.
+
+#### Request Format:
+
+| name                  | notes    | schema                                             |
+| --------------------- | -------- | -------------------------------------------------- |
+| privileges            | optional | Array                                              |
+| service_instance_guid | optional | String                                             |
+| user_guid             | optional | String                                             |
+
+#### Response Format:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| metadata             | Hash                                                         |
+| entity               | Hash                                                         |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServiceInstancesCollaborator is:
+
+| name                  | schema                                                       |
+| --------------------- | ------------------------------------------------------------ |
+| privileges            | Array                                                        |
+| service_instance_guid | String                                                       |
+| service_instance_url  | String /HTTPS_URL_REGEX/                                     |
+| user_guid             | String                                                       |
+| user_url              | String /HTTPS_URL_REGEX/                                     |
+
+
+
+### GET VchsServiceInstancesCollaborator
+
+Resource URL: `GET /v2/vchs_service_instances_collaborations/:guid`
+
+Reads a VchsServiceInstancesCollaborator.
+
+#### Response Format:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| metadata             | Hash                                                         |
+| entity               | Hash                                                         |
+
+The schema for `:metadata` follows the v2 standard:
+
+| name                 | schema                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| guid                 | String                                                       |
+| url                  | String /HTTPS_URL_REGEX/                                     |
+| created_at           | Date                                                         |
+| updated_at           | Date                                                         |
+
+The schema for the `:entity` hash for VchsServiceInstancesCollaborator is:
+
+| name                  | schema                                                       |
+| --------------------- | ------------------------------------------------------------ |
+| privileges            | Array                                                        |
+| service_instance_guid | String                                                       |
+| service_instance_url  | String /HTTPS_URL_REGEX/                                     |
+| user_guid             | String                                                       |
+| user_url              | String /HTTPS_URL_REGEX/                                     |
+
+
+
+
+### DELETE VchsServiceInstancesCollaborator
+
+Resource URL: `DELETE /v2/vchs_service_instances_collaborations/:guid`
+
+Deletes a VchsServiceInstancesCollaborator.
 
 #### Response Format:
 
